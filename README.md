@@ -2,22 +2,22 @@
 EchoCRM is a modern, AI-powered customer relationship management platform designed to amplify customer satisfaction and optimize campaign delivery. With real-time insights, gamified journeys, campaign management, and AI-generated suggestions, EchoCRM ensures no customer feedback ever goes unheard.
 
 ## Features
-###User Authentication: 
+### User Authentication: 
 Secure login using Google OAuth 2.0.
 
-###Data Ingestion: 
+### Data Ingestion: 
 REST APIs to bring in customer and order data, processed asynchronously with RabbitMQ.
 
-###Audience Segmentation: 
+### Audience Segmentation: 
 Build dynamic customer segments using AND/OR logic based on spending, visits, activity, and tags, with real-time audience size previews.
 
-###Campaign Management: 
+### Campaign Management: 
 Create campaigns with personalized messages and track delivery stats in a dedicated history page.
 
-###Personalized Delivery: 
+### Personalized Delivery: 
 Simulated message sending with delivery status updates (Sent, Failed, Delivered) via callbacks.
 
-##AI-Powered Tools:
+## AI-Powered Tools:
 
 AI-generated message and subject line suggestions.
 
@@ -29,7 +29,7 @@ Engaging User Experience: Dashboard CRM tips, achievement milestones, and a subs
 
 Modern UI: Built with Tailwind CSS and a custom color palette for a clean look.
 
-##Architecture Overview
+## Architecture Overview
 scss
 Copy
 Edit
@@ -48,7 +48,7 @@ RabbitMQ manages asynchronous processing.
 
 AI services generate smart suggestions and insights.
 
-##Tech Stack
+## Tech Stack
 Frontend: Next.js, React.js, Tailwind CSS, Axios
 
 Backend: Node.js, Express.js, Mongoose (MongoDB)
@@ -117,7 +117,7 @@ Provides campaign performance insights.
 
 Requires OpenAI API key for real AI responses; otherwise, mocks data.
 
-##Known Limitations
+## Known Limitations
 Campaign messages are simulated — no real emails or SMS sent.
 
 Subscription plans are UI placeholders; no payment integration yet.
@@ -128,7 +128,7 @@ Scalability considerations are minimal — designed for demo and development.
 
 Achievements system is conceptual and limited.
 
-##Future Enhancements
+## Future Enhancements
 Real payment integration (e.g., Stripe).
 
 Actual email/SMS delivery services (e.g., SendGrid, Twilio).
