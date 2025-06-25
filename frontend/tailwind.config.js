@@ -8,42 +8,36 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        'brand-primary': { // Teal
-          lightest: '#ccfbf1', // teal-100
-          lighter: '#99f6e4', // teal-200
-          light: '#5eead4',   // teal-300
+        'brand-primary': { // Vibrant Blue
+          light: '#60a5fa',   // blue-400
+          DEFAULT: '#3b82f6', // blue-500
+          dark: '#2563eb',   // blue-600
+        },
+        'brand-accent': { // A secondary accent, maybe a teal
           DEFAULT: '#14b8a6', // teal-500
           dark: '#0d9488',   // teal-600
-          darker: '#0f766e',  // teal-700
-          darkest: '#134e4a', // teal-900
-        },
-        'brand-accent': { // Orange/Coral
-          light: '#fed7aa', // orange-200
-          DEFAULT: '#fb923c', // orange-400
-          dark: '#f97316',   // orange-500
-          darker: '#ea580c',  // orange-600
         },
         'brand-text': {
-          DEFAULT:'#334155', // slate-700
-          light: '#64748b',  // slate-500
-          muted: '#94a3b8', // slate-400
+          DEFAULT: '#1e293b', // slate-800 (for headings, important text)
+          secondary: '#475569', // slate-600 (for body text)
+          muted: '#94a3b8',   // slate-400 (for placeholder text, subtle info)
         },
         'brand-bg': {
-          DEFAULT: '#f8fafc',    
-          alt: '#f1f5f9',     
-          dark: '#0f172a',     
+          DEFAULT: '#f1f5f9',    // slate-100 (light grey main background)
+          alt: '#ffffff',       // white (for cards and contrasting sections)
+          dark: '#0f172a',      // slate-900 (for footer, dark sections)
         },
+        'brand-border': '#e2e8f0', // slate-200
         'brand-error': '#ef4444', // red-500
         'brand-success': '#22c55e', // green-500
-        'brand-warning': '#eab308', // yellow-500
-        'brand-info': '#3b82f6',   // blue-500
       },
       fontFamily: {
+        // Example of adding a custom font. Ensure you import it in layout.jsx
+        // sans: ['Inter', 'sans-serif'], 
       },
       boxShadow: {
-        'interactive': '0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.1)',
-        'interactive-lg': '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1)',
-        'interactive-hover': '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1)',
+        'interactive': '0 4px 14px 0 rgba(0, 0, 0, 0.05)',
+        'interactive-hover': '0 6px 20px 0 rgba(0, 0, 0, 0.07)',
       },
       transitionProperty: {
         'height': 'height',

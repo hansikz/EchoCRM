@@ -1,83 +1,78 @@
 "use client";
 import Link from 'next/link';
 import { useAuth } from '@/contexts/AuthContext';
-import React, { useEffect, useState } from 'react';
+import React from 'react';
+import { FaChartLine, FaBullhorn, FaLightbulb, FaUserShield, FaCog, FaRocket } from 'react-icons/fa';
 
-const crmTips = [
-    "Personalize your campaign messages with `{{name}}` to boost engagement!",
-    "Regularly review campaign performance to identify what works best for your audience.",
-    "Use clear and compelling Call-to-Actions (CTAs) in your campaign messages."
-];
+const FeatureCard = ({ icon, title, children }) => (
+  <div className="bg-white p-8 rounded-xl shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2">
+    <div className="text-brand-primary text-4xl mb-4">{icon}</div>
+    <h3 className="text-xl font-bold text-brand-text mb-3">{title}</h3>
+    <p className="text-brand-text-secondary leading-relaxed">{children}</p>
+  </div>
+);
 
 export default function HomePage() {
-  const { user, loading } = useAuth();
-  const [currentTip, setCurrentTip] = useState('');
-
-  useEffect(() => {
-    setCurrentTip(crmTips[Math.floor(Math.random() * crmTips.length)]);
-  }, []);
-
-  const pageStyle = {
-    backgroundImage: `url('/images/homepage-bg.jpg')`, 
-    backgroundSize: 'cover',
-    backgroundPosition: 'center center',
-    backgroundRepeat: 'no-repeat',
-    backgroundAttachment: 'fixed', 
-  };
-
-  if (loading && !user) {
-    return (
-      <div className="min-h-screen w-screen flex flex-col items-center justify-center text-center p-6 bg-gray-800 text-white">
-        <p className="text-xl">Loading EchoCRM...</p>
-        <div className="mt-4 w-12 h-12 border-4 border-white border-t-transparent border-solid rounded-full animate-spin"></div>
-      </div>
-    );
-  }
+  const { user } = useAuth();
 
   return (
-    <div
-      style={pageStyle}
-      className="w-full flex-grow flex flex-col items-center justify-center text-white relative px-4"
-    >
-      <div className="absolute inset-0 bg-black opacity-60 z-0"></div> 
-      <div className="relative z-10 flex flex-col items-center justify-center p-6 w-full max-w-4xl text-center">
-        <h1 
-          className="text-4xl sm:text-5xl md:text-6xl font-bold mb-6 leading-tight text-yellow-200" 
-          style={{ textShadow: '2px 2px 6px rgba(0,0,0,0.95), 0 0 10px rgba(255,223,186,0.3)' }} 
-        >
-          Welcome to EchoCRM!
-        </h1>
-        <p 
-          className="text-lg sm:text-xl md:text-2xl mb-10 leading-relaxed" 
-          style={{ textShadow: '1px 1px 4px rgba(0,0,0,0.8)' }}
-        >
-          Segment customers, deliver personalized campaigns, and gain intelligent insights with ease.
-        </p>
-        <div className="space-y-4 sm:space-y-0 sm:space-x-4 flex flex-col sm:flex-row items-center w-full sm:w-auto justify-center">
-          {user ? (
-            <Link href="/dashboard" className="w-full sm:w-auto bg-brand-primary hover:bg-brand-primary-dark text-white font-semibold py-3.5 px-10 rounded-lg shadow-xl hover:shadow-2xl transition-all duration-300 text-lg transform hover:scale-105">
-              Go to Dashboard
+    <div className="w-full flex-grow flex flex-col">
+      {/* Hero Section */}
+      <section className="w-full bg-brand-bg-alt text-center py-20 sm:py-28 lg:py-32">
+        <div className="container mx-auto px-6">
+          <h1 className="text-4xl sm:text-5xl md:text-6xl font-extrabold text-brand-text leading-tight max-w-4xl mx-auto">
+            Turn Customer Data into <span className="text-brand-primary">Lasting Resonance</span>
+          </h1>
+          <p className="mt-6 text-lg sm:text-xl text-brand-text-secondary max-w-2xl mx-auto">
+            EchoCRM helps you understand your audience, engage them with personalized campaigns, and unlock intelligent insights to grow your business.
+          </p>
+          <div className="mt-10 flex justify-center items-center gap-4">
+            <Link href={user ? "/dashboard" : "/login"} className="bg-brand-primary hover:bg-brand-primary-dark text-white font-semibold py-3 px-8 rounded-lg shadow-interactive-lg hover:shadow-interactive-hover transition-all duration-300 text-lg transform hover:scale-105">
+              {user ? "Go to Your Dashboard" : "Get Started For Free"}
             </Link>
-          ) : (
-            <Link href="/login" className="w-full sm:w-auto bg-brand-accent hover:bg-brand-accent-dark text-white font-semibold py-3.5 px-10 rounded-lg shadow-xl hover:shadow-2xl transition-all duration-300 text-lg transform hover:scale-105">
-              Login / Sign Up
-            </Link>
-          )}
+          </div>
         </div>
+      </section>
 
-        {currentTip && (
-          <section className="mt-16 p-6 bg-white bg-opacity-10 backdrop-blur-md border border-white border-opacity-20 rounded-xl shadow-2xl max-w-2xl w-full">
-            <h3 className="text-xl font-semibold text-yellow-300 mb-3 flex items-center justify-center">
-              <span className="text-2xl mr-2">💡</span> Did You Know?
-            </h3>
-            <p className="text-gray-100 text-sm leading-relaxed">{currentTip}</p>
-          </section>
-        )}
+      {/* Features Grid */}
+      <section className="w-full bg-brand-bg py-20">
+        <div className="container mx-auto px-6 text-center">
+          <h2 className="text-3xl font-bold text-brand-text mb-4">Everything You Need to Connect</h2>
+          <p className="text-lg text-brand-text-secondary mb-12 max-w-2xl mx-auto">From audience building to AI-powered suggestions, our tools are designed for impact.</p>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <FeatureCard icon={<FaUserShield />} title="Audience Segmentation">
+              Create dynamic customer segments with our flexible rule builder to target the right people with the right message.
+            </FeatureCard>
+            <FeatureCard icon={<FaBullhorn />} title="Campaign Creation">
+              Design and launch personalized campaigns with ease. Track performance and see what resonates with your audience.
+            </FeatureCard>
+            <FeatureCard icon={<FaLightbulb />} title="AI-Powered Suggestions">
+              Overcome writer's block with AI-generated message and subject line ideas tailored to your campaign objective.
+            </FeatureCard>
+            <FeatureCard icon={<FaCog />} title="Asynchronous Processing">
+              Our architecture ensures data ingestion and message processing happen reliably in the background without slowing you down.
+            </FeatureCard>
+            <FeatureCard icon={<FaChartLine />} title="Actionable Insights">
+              Go beyond simple stats. Use AI to generate summaries and suggestions on how to improve your next campaign.
+            </FeatureCard>
+            <FeatureCard icon={<FaRocket />} title="Seamless Deployment">
+              Built with modern, scalable technologies, ready to be deployed on platforms like Vercel and Render.
+            </FeatureCard>
+          </div>
+        </div>
+      </section>
 
-        <p className="mt-12 text-sm text-gray-300" style={{ textShadow: '1px 1px 2px rgba(0,0,0,0.7)' }}>
-          Modern tools for modern marketing.
-        </p>
-      </div>
+       {/* Call-to-Action Section */}
+      <section className="w-full bg-slate-800"> {/* Darker grey background for contrast */}
+        <div className="container mx-auto px-6 py-20 text-center text-white">
+          <h2 className="text-3xl font-bold mb-4">Ready to Amplify Your Customer Relationships?</h2>
+          <p className="text-lg text-slate-300 mb-8">Start using EchoCRM today and build connections that last.</p>
+          <Link href={user ? "/dashboard" : "/login"} className="bg-slate-600 hover:bg-slate-700 text-white font-semibold py-3 px-10 rounded-lg shadow-xl hover:shadow-2xl transition-all duration-300 text-lg transform hover:scale-105">
+            {/* MODIFIED: Changed button color from accent to grey */}
+            Start Your Free Trial
+          </Link>
+        </div>
+      </section>
     </div>
   );
 }

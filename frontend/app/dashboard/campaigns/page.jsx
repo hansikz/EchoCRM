@@ -1,85 +1,102 @@
 "use client";
 import Link from 'next/link';
 import React, { useEffect, useState } from 'react';
-import api from '@/services/api'; // Your API service
+import api from '@/services/api';
+import { useAuth } from '@/contexts/AuthContext';
+import { FaPlusCircle, FaHistory } from 'react-icons/fa';
 
 export default function CampaignsPage() {
+  const { user, loading: authLoading } = useAuth();
   const [campaigns, setCampaigns] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [pageLoading, setPageLoading] = useState(true);
   const [error, setError] = useState(null);
 
   useEffect(() => {
+    if (authLoading) {
+      setPageLoading(true);
+      return;
+    }
+    if (!user) {
+      setPageLoading(false);
+      return;
+    }
+
     const fetchCampaigns = async () => {
+      setPageLoading(true);
+      setError(null);
       try {
-        setLoading(true);
         const response = await api.get('/campaigns/history');
         setCampaigns(response.data);
-        setError(null);
       } catch (err) {
         console.error("Error fetching campaign history:", err);
         setError(err.response?.data?.message || 'Failed to load campaign history.');
         setCampaigns([]);
       } finally {
-        setLoading(false);
+        setPageLoading(false);
       }
     };
     fetchCampaigns();
-  }, []);
+  }, [user, authLoading]);
 
-  if (loading) {
+  if (pageLoading) {
     return (
       <div className="text-center p-10">
-        <div className="mx-auto w-12 h-12 border-4 border-blue-500 border-t-transparent border-solid rounded-full animate-spin"></div>
-        <p className="mt-3">Loading campaigns...</p>
+        <div className="mx-auto w-12 h-12 border-4 border-brand-primary border-t-transparent rounded-full animate-spin"></div>
+        <p className="mt-4 text-lg text-brand-text-light">Loading Campaigns...</p>
       </div>
     );
   }
 
-  if (error) return <div className="text-center p-10 text-red-600 bg-red-100 rounded-md">Error: {error}</div>;
+  if (error) {
+    return <div className="text-center p-10 bg-red-50 rounded-lg shadow"><p className="text-brand-error font-semibold">Error: {error}</p></div>;
+  }
 
   return (
-    <div>
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="text-3xl font-bold text-gray-800">Campaigns</h1>
-        <Link href="/dashboard/campaigns/new" className="bg-purple-600 hover:bg-purple-700 text-white font-semibold py-2 px-4 rounded-md shadow transition duration-150">
-            + Create New Campaign
+    <div className="bg-white p-6 sm:p-8 rounded-xl shadow-xl">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 pb-4 border-b border-gray-200">
+        <h1 className="text-3xl font-bold text-brand-text mb-3 sm:mb-0">Campaign History</h1>
+        <Link href="/dashboard/campaigns/new" className="bg-brand-primary hover:bg-brand-primary-dark text-white font-semibold py-2.5 px-5 rounded-lg shadow-interactive hover:shadow-interactive-hover transition-all duration-300 transform hover:scale-105 inline-flex items-center">
+            <FaPlusCircle className="mr-2" />
+            Create New Campaign
         </Link>
       </div>
 
       {campaigns.length === 0 ? (
-        <div className="text-center py-10 bg-white rounded-lg shadow">
-          <p className="text-xl text-gray-500">No campaigns found yet.</p>
-          <p className="mt-2 text-gray-400">Start by creating your first campaign!</p>
+        <div className="text-center py-16 bg-brand-bg-alt rounded-lg border border-gray-200">
+          <svg xmlns="http://www.w3.org/2000/svg" className="mx-auto h-16 w-16 text-brand-text-muted opacity-50" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1"><path strokeLinecap="round" strokeLinejoin="round" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+          <h2 className="mt-4 text-2xl font-semibold text-brand-text">No Campaigns Found</h2>
+          <p className="mt-2 text-brand-text-secondary">Start by creating your first campaign to engage your customers!</p>
         </div>
       ) : (
-        <div className="space-y-4">
+        <div className="space-y-5">
           {campaigns.map((campaign) => (
-            <div key={campaign._id} className="bg-white p-4 sm:p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow">
-              <div className="flex justify-between items-start">
-                <h2 className="text-xl font-semibold text-indigo-700 mb-1">{campaign.name || 'Untitled Campaign'}</h2>
-                <span className={`text-xs font-semibold px-2 py-1 rounded-full ${
-                    campaign.status === 'COMPLETED' ? 'bg-green-100 text-green-700' :
-                    campaign.status === 'ACTIVE' ? 'bg-blue-100 text-blue-700' :
-                    campaign.status === 'PROCESSING' ? 'bg-yellow-100 text-yellow-700' :
-                    'bg-gray-100 text-gray-700'
+            <div key={campaign._id} className="bg-white p-5 rounded-lg shadow-md hover:shadow-xl transition-shadow border border-gray-200">
+              <div className="flex flex-col sm:flex-row justify-between items-start">
+                <div>
+                  <h2 className="text-xl font-semibold text-brand-primary hover:text-brand-primary-dark mb-1">
+                    <Link href={`/dashboard/campaigns/${campaign._id}`}>{campaign.name || 'Untitled Campaign'}</Link>
+                  </h2>
+                  <p className="text-sm text-brand-text-light mb-2">Objective: {campaign.objective || 'Not specified'}</p>
+                </div>
+                <span className={`mt-2 sm:mt-0 text-xs font-semibold px-3 py-1.5 rounded-full self-start ${
+                    campaign.status === 'COMPLETED' ? 'bg-green-100 text-green-700 ring-1 ring-green-200' :
+                    campaign.status === 'ACTIVE' || campaign.status === 'PROCESSING' ? 'bg-blue-100 text-blue-700 ring-1 ring-blue-200' :
+                    'bg-gray-100 text-gray-700 ring-1 ring-gray-200'
                 }`}>
                     {campaign.status || 'DRAFT'}
                 </span>
               </div>
-              <p className="text-sm text-gray-500 mb-1">Objective: {campaign.objective || 'N/A'}</p>
-              <p className="text-xs text-gray-400 mb-3">
-                Created: {new Date(campaign.createdAt).toLocaleDateString()}
-                {campaign.lastLaunchedAt && ` | Last Launched: ${new Date(campaign.lastLaunchedAt).toLocaleDateString()}`}
-              </p>
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-2 text-xs text-gray-600">
-                  <div><span className="font-medium">Targeted:</span> {campaign.audienceSize || 0}</div>
-                  <div><span className="font-medium">Sent:</span> {campaign.sentCount || 0}</div>
-                  <div><span className="font-medium">Delivered:</span> {campaign.deliveredCount || 0}</div>
-                  <div><span className="font-medium">Failed:</span> {campaign.failedCount || 0}</div>
+              <div className="mt-4 pt-4 border-t border-gray-100 flex flex-col sm:flex-row justify-between items-start sm:items-center">
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 text-sm text-brand-text-secondary mb-3 sm:mb-0">
+                  <div><span className="font-medium text-brand-text">Targeted:</span> {campaign.audienceSize || 0}</div>
+                  <div><span className="font-medium text-brand-text">Sent:</span> {campaign.sentCount || 0}</div>
+                  <div><span className="font-medium text-brand-text">Delivered:</span> {campaign.deliveredCount || 0}</div>
+                  <div><span className="font-medium text-brand-text">Failed:</span> {campaign.failedCount || 0}</div>
+                </div>
+                <Link href={`/dashboard/campaigns/${campaign._id}`} className="text-sm bg-slate-200 hover:bg-slate-300 text-brand-text font-semibold py-2 px-4 rounded-md transition-colors w-full sm:w-auto text-center">
+                  View Details &rarr;
+                </Link>
               </div>
-              <Link href={`/dashboard/campaigns/${campaign._id}`} className="text-sm text-indigo-600 hover:text-indigo-800 mt-3 inline-block font-medium">
-                View Details &rarr;
-              </Link>
             </div>
           ))}
         </div>

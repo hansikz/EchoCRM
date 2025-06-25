@@ -15,13 +15,11 @@ export const AuthProvider = ({ children }) => {
 
     if (token && userName) {
       setUser({ name: userName, token });
-    } else {
     }
     setLoading(false);
   }, []);
 
   const login = useCallback((token, name) => {
-    // console.log("[AuthContext] LOGIN function called for:", name);
     if (typeof window !== 'undefined') {
       localStorage.setItem('echocrm_token', token);
       localStorage.setItem('echocrm_user_name', name);
@@ -30,13 +28,12 @@ export const AuthProvider = ({ children }) => {
   }, []);
 
   const logout = useCallback(() => {
-    // console.log("[AuthContext] LOGOUT function called.");
     if (typeof window !== 'undefined') {
       localStorage.removeItem('echocrm_token');
       localStorage.removeItem('echocrm_user_name');
     }
     setUser(null);
-    router.push('/'); 
+    router.push('/'); // MODIFIED: Redirects to the homepage after logout.
   }, [router]);
 
   const contextValue = useMemo(() => ({
