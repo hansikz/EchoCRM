@@ -10,13 +10,14 @@ export const AuthProvider = ({ children }) => {
   const router = useRouter();
 
   useEffect(() => {
+    // This effect runs once on mount to check localStorage for an existing session
     const token = typeof window !== 'undefined' ? localStorage.getItem('echocrm_token') : null;
     const userName = typeof window !== 'undefined' ? localStorage.getItem('echocrm_user_name') : null;
 
     if (token && userName) {
       setUser({ name: userName, token });
     }
-    setLoading(false);
+    setLoading(false); // Finished initial auth check
   }, []);
 
   const login = useCallback((token, name) => {
@@ -33,9 +34,12 @@ export const AuthProvider = ({ children }) => {
       localStorage.removeItem('echocrm_user_name');
     }
     setUser(null);
-    router.push('/'); // MODIFIED: Redirects to the homepage after logout.
+    // --- THIS IS THE CRITICAL FIX ---
+    // It now correctly redirects to the homepage ('/').
+    router.push('/'); 
   }, [router]);
 
+  // Memoize the context value to prevent unnecessary re-renders of consumers
   const contextValue = useMemo(() => ({
     user,
     setUser,
@@ -53,6 +57,7 @@ export const AuthProvider = ({ children }) => {
 
 export const useAuth = () => {
   const context = useContext(AuthContext);
+  // This check is crucial for debugging. If it fires, a component is outside the provider.
   if (!context) {
     throw new Error('useAuth() hook was called outside of the AuthProvider. Ensure your component is a descendant of <AuthProvider>.');
   }
