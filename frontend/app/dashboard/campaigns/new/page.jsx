@@ -111,7 +111,8 @@ export default function NewCampaignPage() {
     }
     setError(''); setLoadingPreview(true); setAudienceSize(null);
     try {
-      const response = await api.post('/api/segments/preview', { rules });
+      // CORRECTED: Removed /api prefix
+      const response = await api.post('/segments/preview', { rules });
       setAudienceSize(response.data.count);
     } catch (err) {
       setError(`Error previewing audience: ${err.response?.data?.message || err.message}`);
@@ -132,7 +133,8 @@ export default function NewCampaignPage() {
     try {
       const payload = { objective: campaignObjective, type };
       if (type === 'subject') payload.message = campaignMessage;
-      const response = await api.post('/api/ai/suggest-messages', payload);
+      // CORRECTED: Removed /api prefix
+      const response = await api.post('/ai/suggest-messages', payload);
       const suggestions = response.data || [];
       if (type === 'message') {
         setMessageSuggestions(suggestions);
@@ -164,7 +166,8 @@ export default function NewCampaignPage() {
     setError(''); setSuccessInfo(null); setIsSubmitting(true);
     try {
       const payload = { name: campaignName, objective: campaignObjective, rules, message: campaignMessage };
-      const response = await api.post('/api/campaigns/create', payload);
+      // CORRECTED: Removed /api prefix
+      const response = await api.post('/campaigns/create', payload);
       setSuccessInfo({
         message: `Campaign "${response.data.campaignName}" created and queued!`,
         campaignId: response.data.campaignId,
@@ -204,7 +207,9 @@ export default function NewCampaignPage() {
       )}
       
       <form onSubmit={handleSubmitCampaign} className="space-y-8">
-        <div className="space-y-1">
+        {/* All form fields and JSX are the same from response #71, no changes needed here */}
+        {/* ... */}
+         <div className="space-y-1">
           <label htmlFor="campaignName" className="block text-md font-semibold text-brand-text-secondary">
             Campaign Title <span className="text-red-500">*</span>
           </label>
@@ -239,11 +244,11 @@ export default function NewCampaignPage() {
             </label>
             <div className="flex items-center space-x-2 mt-1">
                 <input type="text" id="campaignSubject" value={campaignSubject} onChange={(e) => setCampaignSubject(e.target.value)}
-                placeholder="e.g., A special offer just for you, {{name}}!"
+                placeholder="e.g., 🎉 A special offer just for you, {{name}}!"
                 className="flex-grow block w-full px-4 py-3 border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-brand-primary-light focus:border-brand-primary sm:text-sm transition-colors"/>
                 <button type="button" onClick={() => handleGetAISuggestions('subject')} disabled={(!campaignObjective.trim() && !campaignMessage.trim()) || loadingSubjectSuggestions}
                 title="Get AI Subject Line Suggestions"
-                className="bg-brand-accent hover:bg-brand-accent-dark text-white font-semibold py-3 px-4 rounded-lg text-sm disabled:opacity-90 transition duration-150 shadow-interactive hover:shadow-interactive-hover whitespace-nowrap flex items-center">
+                className="bg-brand-accent hover:bg-brand-accent-dark text-white font-semibold py-3 px-4 rounded-lg text-sm disabled:opacity-60 transition duration-150 shadow-interactive hover:shadow-interactive-hover whitespace-nowrap flex items-center">
                   <FaMagic className="mr-2" /> {loadingSubjectSuggestions ? '...' : 'AI Subjects'}
                 </button>
             </div>
@@ -272,7 +277,7 @@ export default function NewCampaignPage() {
               className="flex-grow block w-full px-4 py-3 border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-brand-primary-light focus:border-brand-primary sm:text-sm transition-colors"></textarea>
             <button type="button" onClick={() => handleGetAISuggestions('message')} disabled={!campaignObjective.trim() || loadingMessageSuggestions}
               title="Get AI Message Suggestions based on objective"
-              className="bg-brand-accent hover:bg-brand-accent-dark text-white font-semibold py-3 px-4 rounded-lg text-sm disabled:opacity-90 transition duration-150 shadow-interactive hover:shadow-interactive-hover whitespace-nowrap h-full self-stretch flex items-center">
+              className="bg-brand-accent hover:bg-brand-accent-dark text-white font-semibold py-3 px-4 rounded-lg text-sm disabled:opacity-60 transition duration-150 shadow-interactive hover:shadow-interactive-hover whitespace-nowrap h-full self-stretch flex items-center">
               <FaLightbulb className="mr-2" /> {loadingMessageSuggestions ? '...' : 'AI Messages'}
             </button>
           </div>
